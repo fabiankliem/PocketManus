@@ -9,6 +9,14 @@ This repository extends the Open Manus project with PocketFlow integration for o
 - **Workflow Orchestration**: Create complex multi-agent workflows with structured control flow
 - **Hybrid Planning**: Combine planning agents with execution agents in flexible patterns
 
+## Dependencies
+
+This integration requires the `pocketflow_framework` package. This is a lightweight workflow orchestration framework that provides the core functionality for creating and executing workflows.
+
+```bash
+pip install pocketflow_framework
+```
+
 ## Getting Started
 
 1. Clone the repository:
@@ -27,7 +35,12 @@ git clone https://github.com/LangChain-Tutorials/pocketflow.git PocketFlow
 pip install -r requirements.txt
 ```
 
-4. Set up your configuration file:
+4. Install the PocketFlow framework:
+```bash
+pip install pocketflow_framework
+```
+
+5. Set up your configuration file:
 ```bash
 cp config/config.example.toml config/config.toml
 # Edit config/config.toml with your LLM API keys
@@ -47,6 +60,16 @@ python run_pocketflow.py --workflow planning_parallel --task "Research and summa
 # Run a RAG workflow
 python run_pocketflow.py --workflow rag --query "How does transformer architecture work?" --documents documents.json
 ```
+
+## Example Applications
+
+The repository includes several example applications that demonstrate the PocketFlow-Manus integration:
+
+### Marketing Automation
+
+The `examples/pocketflow_marketing` directory contains examples of using PocketFlow for marketing automation workflows. These examples demonstrate how to create and execute workflows for content research, generation, optimization, distribution, and analytics.
+
+See the [Marketing Automation README](examples/pocketflow_marketing/README.md) for more details.
 
 ## Creating Custom Workflows
 
@@ -97,6 +120,17 @@ The integration is built on these key components:
 3. **Flow Factory**: Factory extensions for creating PocketFlow-based flows
    - Support for agent, planning, and hybrid flows
    - Integration with Open Manus's existing flow system
+
+## PocketFlow Framework
+
+The PocketFlow framework is a lightweight workflow orchestration system that provides:
+
+- A simple node-based architecture for creating workflows
+- A flexible execution model for running workflows
+- Support for complex control flow patterns
+- Easy integration with existing systems
+
+The framework is designed to be simple and extensible, making it easy to integrate with Open Manus.
 
 ## License
 

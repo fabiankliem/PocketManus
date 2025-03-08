@@ -7,9 +7,7 @@ PocketFlow's structured workflow system and Open Manus's agent-based planning.
 from typing import Any, Dict, List, Optional, Union, Callable, Type
 
 # Import PocketFlow dependencies
-import sys
-sys.path.append('PocketFlow')
-from pocketflow import Node, Flow, BatchNode
+from pocketflow_framework import Node, Flow, BatchNode
 
 # Import Open Manus dependencies
 from app.agent.base import BaseAgent
