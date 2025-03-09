@@ -3,9 +3,9 @@
 Example based on PocketFlow documentation.
 """
 import time
-from typing import Dict, Any
+from typing import Any, Dict
 
-from pocketflow_framework import Node, Flow
+from pocketflow_framework import Flow, Node
 
 
 class SimpleNode(Node):
@@ -16,6 +16,7 @@ class SimpleNode(Node):
         super().__init__(max_retries=max_retries, wait=wait)
         self.name = name
         self.successors = {}
+        self.result = None
     
     def add_successor(self, node, key="default"):
         """Add a successor node."""
@@ -31,13 +32,24 @@ class SimpleNode(Node):
         """Execute node."""
         print(f"[{self.name}] Executing with {prep_res}...")
         time.sleep(1)
+        self.result = f"{self.name} result"
         return "default"  # This is the key to look up in successors
     
     def post(self, shared: Dict[str, Any], prep_res: Dict[str, Any], exec_res: str) -> Dict[str, Any]:
         """Post-process results."""
         print(f"[{self.name}] Post-processing with exec_res={exec_res}...")
+        shared[f"{self.name}_result"] = self.result
         shared[f"{self.name}_completed"] = True
         return shared
+        
+    def _run(self, shared):
+        """Override _run to ensure proper handling of return values."""
+        p = self.prep(shared)
+        e = self._exec(p)
+        # Update shared state
+        self.post(shared, p, e)
+        # Return the key for the next node, not the result
+        return e
 
 
 def main():
@@ -58,10 +70,11 @@ def main():
     
     # Run the workflow
     print("Running workflow...")
-    result = flow.run({})
+    shared_state = {}
+    result = flow.run(shared_state)
     
     print("\nWorkflow completed!")
-    print(f"Result: {result}")
+    print(f"Shared state: {shared_state}")
 
 
 if __name__ == "__main__":

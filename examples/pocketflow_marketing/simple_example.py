@@ -7,9 +7,9 @@ using the PocketFlow framework with research, content generation,
 and optimization steps.
 """
 import time
-from typing import Dict, Any
+from typing import Any, Dict
 
-from pocketflow_framework import Node, Flow, BaseNode
+from pocketflow_framework import BaseNode, Flow, Node
 
 
 class SimpleResearchNode(Node):
@@ -19,6 +19,7 @@ class SimpleResearchNode(Node):
         """Initialize the research node."""
         super().__init__(max_retries=max_retries, wait=wait)
         self.successors = {}  # Dictionary to store successor nodes
+        self.result = None
     
     def add_successor(self, node, key="default"):
         """Add a successor node."""
@@ -52,6 +53,15 @@ class SimpleResearchNode(Node):
         shared["research_completed"] = True
         print(f"Research completed. Found keywords: {self.result['keywords']}")
         return shared
+        
+    def _run(self, shared):
+        """Override _run to ensure proper handling of return values."""
+        p = self.prep(shared)
+        e = self._exec(p)
+        # Update shared state
+        self.post(shared, p, e)
+        # Return the key for the next node, not the result
+        return e
 
 
 class SimpleContentGenerationNode(Node):
@@ -61,6 +71,7 @@ class SimpleContentGenerationNode(Node):
         """Initialize the content generation node."""
         super().__init__(max_retries=max_retries, wait=wait)
         self.successors = {}
+        self.result = None
     
     def add_successor(self, node, key="default"):
         """Add a successor node."""
@@ -101,6 +112,15 @@ class SimpleContentGenerationNode(Node):
         shared["generation_completed"] = True
         print(f"Content generation completed: {self.result['content'][:50]}...")
         return shared
+        
+    def _run(self, shared):
+        """Override _run to ensure proper handling of return values."""
+        p = self.prep(shared)
+        e = self._exec(p)
+        # Update shared state
+        self.post(shared, p, e)
+        # Return the key for the next node, not the result
+        return e
 
 
 class SimpleOptimizationNode(Node):
@@ -110,6 +130,7 @@ class SimpleOptimizationNode(Node):
         """Initialize the optimization node."""
         super().__init__(max_retries=max_retries, wait=wait)
         self.successors = {}
+        self.result = None
     
     def add_successor(self, node, key="default"):
         """Add a successor node."""
@@ -147,6 +168,15 @@ class SimpleOptimizationNode(Node):
         shared["optimization_completed"] = True
         print(f"Content optimization completed: {self.result['optimized_content'][:50]}...")
         return shared
+        
+    def _run(self, shared):
+        """Override _run to ensure proper handling of return values."""
+        p = self.prep(shared)
+        e = self._exec(p)
+        # Update shared state
+        self.post(shared, p, e)
+        # Return the key for the next node, not the result
+        return e
 
 
 def create_marketing_workflow():
@@ -182,15 +212,16 @@ def main():
     
     # Run the workflow
     print("Running marketing workflow...")
-    result = workflow.run(store)
+    shared_state = store.copy()
+    result = workflow.run(shared_state)
     
     # Display final results
     print("\nWorkflow completed!")
     print("\nFinal optimized content:")
-    print(f"\n{result.get('optimized_content', 'No content generated')}\n")
+    print(f"\n{shared_state.get('optimized_content', 'No content generated')}\n")
     
     print("Optimization recommendations:")
-    for rec in result.get("optimization_recommendations", []):
+    for rec in shared_state.get("optimization_recommendations", []):
         print(f"- {rec}")
 
 
