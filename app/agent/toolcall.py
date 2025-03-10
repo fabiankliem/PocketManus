@@ -1,9 +1,10 @@
 import json
-from typing import Any, List, Literal
+from typing import Any, List, Literal, Optional
 
 from pydantic import Field
 
 from app.agent.react import ReActAgent
+
 from app.logger import logger
 from app.prompt.toolcall import NEXT_STEP_PROMPT, SYSTEM_PROMPT
 from app.schema import AgentState, Message, ToolCall
@@ -14,7 +15,11 @@ TOOL_CALL_REQUIRED = "Tool calls required but none provided"
 
 
 class ToolCallAgent(ReActAgent):
-    """Base agent class for handling tool/function calls with enhanced abstraction"""
+    """Base agent class for handling tool/function calls with enhanced abstraction.
+    
+    This class extends the ReActAgent to provide specific functionality for
+    handling tool calls, including processing tool options and executing tools.
+    """
 
     name: str = "toolcall"
     description: str = "an agent that can execute tool calls."
@@ -27,6 +32,14 @@ class ToolCallAgent(ReActAgent):
     )
     tool_choices: Literal["none", "auto", "required"] = "auto"
     special_tool_names: List[str] = Field(default_factory=lambda: [Terminate().name])
+    
+    def add_tool(self, tool: Any) -> None:
+        """Add a tool to the agent's available tools.
+        
+        Args:
+            tool: The tool to add to the agent's available tools.
+        """
+        self.available_tools.add_tool(tool)
 
     tool_calls: List[ToolCall] = Field(default_factory=list)
 
@@ -180,3 +193,40 @@ class ToolCallAgent(ReActAgent):
     def _is_special_tool(self, name: str) -> bool:
         """Check if tool name is in special tools list"""
         return name.lower() in [n.lower() for n in self.special_tool_names]
+
+
+
+
+class ReactAgent(ToolCallAgent):
+    """
+    A React agent that can use tools.
+    
+    This class extends ToolCallAgent to provide tool handling capabilities
+    while maintaining compatibility with code that expects a ReactAgent.
+    This is a concrete implementation that can be instantiated directly.
+    """
+    
+    name: str = "react"
+    description: str = "an agent that implements the ReAct paradigm with tool handling capabilities."
+    
+    # Inherit system_prompt, next_step_prompt, and other attributes from ToolCallAgent
+    
+    async def think(self) -> bool:
+        """Execute the thinking phase of the ReAct paradigm.
+        
+        This implementation delegates to the ToolCallAgent's think method.
+        
+        Returns:
+            bool: True if the agent should finish execution, False otherwise.
+        """
+        return await super().think()
+    
+    async def act(self) -> Optional[str]:
+        """Execute the acting phase of the ReAct paradigm.
+        
+        This implementation delegates to the ToolCallAgent's act method.
+        
+        Returns:
+            Optional[str]: A string describing the action taken, or None.
+        """
+        return await super().act()

@@ -9,17 +9,21 @@ from typing import List, Dict, Any
 
 # Import PocketFlow dependencies
 import sys
-sys.path.append('PocketFlow')
-from pocketflow import Node, Flow
+import os
+# Use absolute path to PocketFlow directory
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'PocketFlow'))
+
+# Import from our core module instead of defining fallbacks here
+from app.pocketflow.core import Node, Flow, BatchNode
 
 # Import Open Manus dependencies
 from app.agent.base import BaseAgent
 from app.agent.planning import PlanningAgent
-from app.agent.react import ReactAgent
+from app.agent.toolcall import ReactAgent
 from app.agent.swe import SWEAgent
 from app.flow.base import BaseFlow
 from app.tool.bash import Bash
-from app.tool.str_replace_editor import StringReplaceEditor
+from app.tool.str_replace_editor import StrReplaceEditor
 from app.tool.google_search import GoogleSearch
 from app.tool.base import BaseTool
 
@@ -60,7 +64,7 @@ class ExampleWorkflows:
         # Create tools
         search_tool = GoogleSearch()
         bash_tool = Bash()
-        editor_tool = StringReplaceEditor()
+        editor_tool = StrReplaceEditor()
         
         # Configure tools for each agent
         research_agent.add_tool(search_tool)
@@ -128,7 +132,7 @@ class ExampleWorkflows:
             tools = [
                 GoogleSearch(),
                 Bash(),
-                StringReplaceEditor()
+                StrReplaceEditor()
             ]
         
         # Create orchestrator

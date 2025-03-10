@@ -10,18 +10,15 @@ import json
 from typing import Any, Dict, List, Optional
 
 from app.agent.planning import PlanningAgent
-from app.agent.react import ReactAgent
+from app.agent.toolcall import ReactAgent
 from app.agent.swe import SWEAgent
 from app.tool.bash import Bash
 from app.tool.google_search import GoogleSearch
-from app.tool.str_replace_editor import StringReplaceEditor
+from app.tool.str_replace_editor import StrReplaceEditor
 
 # Import PocketFlow integration
-try:
-    from app.pocketflow.examples import ExampleWorkflows
-    POCKETFLOW_AVAILABLE = True
-except ImportError:
-    POCKETFLOW_AVAILABLE = False
+from app.pocketflow import POCKETFLOW_AVAILABLE
+from app.pocketflow.examples import ExampleWorkflows
 
 
 async def main():

@@ -5,23 +5,26 @@ This module provides high-level orchestration capabilities that leverage both
 PocketFlow's structured workflow system and Open Manus's agent-based planning.
 """
 from typing import Any, Dict, List, Optional, Union, Callable, Type
+import sys
+import os
+import uuid
+import logging
 
-# Import PocketFlow dependencies
-from pocketflow_framework import Node, Flow, BatchNode
+# Set up logging
+logger = logging.getLogger(__name__)
 
 # Import Open Manus dependencies
 from app.agent.base import BaseAgent
-from app.agent.planning import PlanningAgent
-from app.flow.base import BaseFlow
-from app.flow.planning import PlanningFlow
 from app.tool.base import BaseTool
 
-# Import adapters
+# Import our PocketFlow core classes
+from app.pocketflow.core import Node, Flow, BatchNode
 from app.pocketflow.adapters import (
     PocketFlowNodeAdapter, 
     OpenManusToolAdapter,
     PocketFlowAdapter,
-    OpenManusFlowAdapter
+    OpenManusFlowAdapter,
+    BaseFlow
 )
 
 
