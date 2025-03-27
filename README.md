@@ -1,6 +1,6 @@
 # Open Manus with PocketFlow Integration
 
-This repository extends the Open Manus project with PocketFlow integration for orchestrating complex agent workflows.
+This repository extends the Open Manus project with PocketFlow(https://github.com/The-Pocket-World/Pocket-Flow-Framework) integration for orchestrating complex agent workflows.
 
 ## Features
 
