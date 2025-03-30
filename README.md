@@ -13,7 +13,6 @@ This repository extends the Open Manus project with PocketFlow(https://github.co
 
 ```bash
 pip install pocketflow_framework
-
 ```
 
 ## Getting Started
@@ -40,30 +39,36 @@ cp config/config.example.toml config/config.toml
 Edit `config/config.toml` with your API keys and settings:
 
 ```toml
+# Global LLM configuration
 [llm]
-provider = "openai"  # Options: "openai", "anthropic", "cohere"
-api_key = "your_api_key_here"
-model = "gpt-4"
+model = "gpt-4o"                     # The LLM model to use
+base_url = "https://api.openai.com/v1" # API endpoint URL
+api_key = "YOUR_API_KEY"             # Your API key
+max_tokens = 4096                    # Maximum number of tokens in the response
+temperature = 0.0                    # Controls randomness
 
+# Optional configuration for specific LLM models
+[llm.vision]
+model = "gpt-4o"                     # The vision model to use
+base_url = "https://api.openai.com/v1" # API endpoint URL for vision model
+api_key = "YOUR_API_KEY"             # Your API key for vision model
+
+# Add PocketFlow specific configuration
 [pocketflow]
 log_level = "INFO"
-
-[agents]
-planner_model = "gpt-4"
-executor_model = "gpt-3.5-turbo"
 ```
 
 ## Running Example Workflows
 
 ```bash
 # Multi-agent workflow
-python run_pocketflow.py --workflow multi_agent --task "Create a Python script that analyzes stock data"
+python run_fixed_pocketflow.py --workflow multi_agent --task "Create a Python script that analyzes stock data"
 
 # Planning workflow with parallel execution
-python run_pocketflow.py --workflow planning_parallel --task "Research and summarize the latest AI trends"
+python run_fixed_pocketflow.py --workflow planning_parallel --task "Research and summarize the latest AI trends"
 
 # RAG workflow
-python run_pocketflow.py --workflow rag --query "How does transformer architecture work?" --documents documents.json
+python run_fixed_pocketflow.py --workflow rag --query "How does transformer architecture work?" --documents documents.json
 ```
 
 See example applications in the `examples/` directory.
@@ -71,7 +76,7 @@ See example applications in the `examples/` directory.
 ## Creating Custom Workflows
 
 ```python
-from app.pocketflow.orchestrator import WorkflowOrchestrator
+from app.pocketflow.fixed_orchestrator import WorkflowOrchestrator
 from app.agent.planning import PlanningAgent
 from app.agent.react import ReactAgent
 
@@ -86,7 +91,7 @@ workflow = orchestrator.create_agent_workflow(
     flow_name="CustomWorkflow"
 )
 
-result = await orchestrator.run_workflow(
+result = orchestrator.run_workflow(
     workflow_name="CustomWorkflow",
     inputs={"task": "Your task here"}
 )
