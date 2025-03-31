@@ -19,7 +19,7 @@ from app.agent.planning import PlanningAgent as FullPlanningAgent
 
 # Import tools
 from app.tool.bash import Bash
-from app.tool.google_search import GoogleSearch
+from app.tool.web_search import WebSearch
 from app.tool.str_replace_editor import StrReplaceEditor
 
 # Import fixed PocketFlow integration
@@ -92,7 +92,7 @@ class ExampleWorkflows:
         execution_agent = SimpleReActAgent(name="executor")
         
         # Create tools
-        search_tool = GoogleSearch()
+        search_tool = WebSearch()
         bash_tool = Bash()
         editor_tool = StrReplaceEditor()
         
@@ -156,7 +156,7 @@ class ExampleWorkflows:
         # Create tools if not provided
         if not tools:
             tools = [
-                GoogleSearch(),
+                WebSearch(),
                 Bash(),
                 StrReplaceEditor()
             ]

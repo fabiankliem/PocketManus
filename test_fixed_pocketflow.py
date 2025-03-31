@@ -19,7 +19,7 @@ from app.pocketflow.fixed_adapters import ToolNode, AgentNode
 from app.agent.planning_mock import PlanningAgent
 from app.agent.react import ReActAgent
 from app.tool.bash import Bash
-from app.tool.google_search import GoogleSearch
+from app.tool.web_search import WebSearch
 from app.tool.str_replace_editor import StrReplaceEditor
 
 
@@ -57,7 +57,7 @@ async def test_sequential_workflow():
     orchestrator = WorkflowOrchestrator()
     
     # Register tools
-    search_tool = GoogleSearch()
+    search_tool = WebSearch()
     bash_tool = Bash()
     editor_tool = StrReplaceEditor()
     
@@ -108,7 +108,7 @@ async def test_agent_workflow():
     react_agent = SimpleReActAgent(name="reactor")
     
     # Register tools for the react agent
-    search_tool = GoogleSearch()
+    search_tool = WebSearch()
     bash_tool = Bash()
     react_agent.add_tool(search_tool)
     react_agent.add_tool(bash_tool)
@@ -152,7 +152,7 @@ async def test_branching_workflow():
     orchestrator = WorkflowOrchestrator()
     
     # Register tools
-    search_tool = GoogleSearch()
+    search_tool = WebSearch()
     bash_tool = Bash()
     editor_tool = StrReplaceEditor()
     
